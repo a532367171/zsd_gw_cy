@@ -46,7 +46,7 @@ namespace 出窑工位采集服务
         }
         #endregion
 
-        
+
 
         #region 周期执行（定时器到期执行）
         public void theout(object source, System.Timers.ElapsedEventArgs e)
@@ -64,39 +64,40 @@ namespace 出窑工位采集服务
 
                 #endregion
 
-                if (read_new_value == read_old_value || read_new_value == read_middle_value)
+                if (read_new_value == read_state_value)
                 {
+                    ii++;
                 }
                 else
                 {
-                    //新旧值结构 rowCol = new 新旧值结构();
-                    //rowCol.new_value = read_new_value;
-                    //rowCol.old_value = read_old_value;
-                    //rowCol.middle_value = read_old_value;
-                    //Thread t = new Thread((new ParameterizedThreadStart(OnNumChanged)));
-                    //t.Start(rowCol);
-                    //read_middle_value = read_old_value;
-                    //read_old_value = read_new_value;
+                    read_state_value = read_new_value;
+                    ii = 0;
+                }
+                #endregion
 
-
-
-
-
-
-                    #region 重复判断
-                    if (read_new_value == read_state_value)
+                if (ii > 3)
+                {
+                    if (read_new_value == read_old_value || read_new_value == read_middle_value)
                     {
-                        ii++;
                     }
                     else
                     {
-                        read_state_value = read_new_value;
-                        ii = 0;
-                    } 
-                    #endregion
+                        //新旧值结构 rowCol = new 新旧值结构();
+                        //rowCol.new_value = read_new_value;
+                        //rowCol.old_value = read_old_value;
+                        //rowCol.middle_value = read_old_value;
+                        //Thread t = new Thread((new ParameterizedThreadStart(OnNumChanged)));
+                        //t.Start(rowCol);
+                        //read_middle_value = read_old_value;
+                        //read_old_value = read_new_value;
 
-                    if (ii>3)
-                    {
+
+
+
+
+
+                        #region 重复判断
+
                         ii = 0;
                         try
                         {
@@ -178,7 +179,7 @@ namespace 出窑工位采集服务
                             if (read_new_value_List[4] == "0" && read_new_value_List[5] == "1" && read_old_value_List[5] == "0")
                             {
                                 strD = "INSERT INTO CmdGongWei (cGWid,cGWlineCode,cManufacture) VALUES  ('13','04','" + Manufacture + "')";
-                            } 
+                            }
                             #endregion
 
 
@@ -213,7 +214,7 @@ namespace 出窑工位采集服务
                             finally
                             {
                                 #region 变化日记
-                                AppLog.Write(System.Convert.ToString(Convert.ToInt32(read_old_value), 2).PadLeft(7, '0') + "--" + System.Convert.ToString(Convert.ToInt32(read_new_value), 2).PadLeft(7, '0') + "--插入标识：" + Convert.ToString(i) + "--" + strD + "\r\n" +string.Join(",", read_new_value_List)+"--" + string.Join(",", read_old_value_List));
+                                AppLog.Write(System.Convert.ToString(Convert.ToInt32(read_old_value), 2).PadLeft(7, '0') + "--" + System.Convert.ToString(Convert.ToInt32(read_new_value), 2).PadLeft(7, '0') + "--插入标识：" + Convert.ToString(i) + "--" + strD + "\r\n" + string.Join(",", read_new_value_List) + "--" + string.Join(",", read_old_value_List));
                                 #endregion
                                 read_middle_value = read_old_value;
                                 read_old_value = read_new_value;
@@ -231,8 +232,8 @@ namespace 出窑工位采集服务
                             #endregion
                         }
 
-                    }
 
+                    }
 
                 }
             }
